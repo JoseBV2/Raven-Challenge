@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  ArticleListView.swift
 //  Raven Challenge
 //
 //  Created by Jóse Bustamante on 11/24/24.
@@ -7,15 +7,23 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct ArticleListView: View {
-    @StateObject private var viewModel = ArticleListViewModel()
-
+    
+    // MARK: - Properties
+    
+    @StateObject private var viewModel: ArticleListViewModel
+    
+    // MARK: - Init
+    
+    init(articles: [Article] = []) {
+        self._viewModel = StateObject(wrappedValue: ArticleListViewModel(articles: articles))
+    }
+    
+    // MARK: - Body
+    
     var body: some View {
         NavigationView {
             VStack {
-                // Header
                 VStack(alignment: .leading) {
                     Text("The New York Times")
                         .font(.largeTitle)
@@ -26,18 +34,65 @@ struct ArticleListView: View {
                         .foregroundColor(.gray)
                 }
                 .padding(.horizontal)
+                .frame(alignment: .top)
+                if viewModel.isLoading {
+                    ProgressView("Loading Articles...")
+                        .font(.title2)
+                        .padding()
+                } else if let errorMessage = viewModel.errorMessage {
+                    VStack(spacing: 16) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .resizable()
+                            .frame(width: 90, height: 90)
+                            .foregroundColor(.red)
 
-                // Articles List
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(viewModel.articles) { article in
-                            NavigationLink(destination: ArticleDetailView(article: article)) {
-                                ArticleCardView(article: article)
-                                    .padding(.horizontal)
+                        Text("Oops! Something went wrong.")
+                            .font(.headline)
+
+                        Text(errorMessage)
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+
+                        Button(action: {
+                            viewModel.fetchArticles(force: true)
+                        }) {
+                            Text("Try Again")
+                                .bold()
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.red.opacity(0.8))
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal, 32)
+                    }
+                    .padding()
+                    Text("Or click here to see stored data")
+                        .font(.headline)
+                        .onTapGesture {
+                            viewModel.assignStoreArticles()
+                        }
+                } else if viewModel.articles.isEmpty {
+                    Text("No articles found")
+                        .foregroundColor(.gray)
+                        .padding()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
+                            ForEach(viewModel.articles) { article in
+                                NavigationLink(destination: ArticleDetailView(article: article)) {
+                                    ArticleCardView(article: article)
+                                        .padding(.horizontal)
+                                }
                             }
                         }
                     }
                 }
+            }
+            .refreshable {
+                viewModel.fetchArticles(force: true) 
             }
             .navigationBarHidden(true)
             .onAppear {
@@ -47,43 +102,8 @@ struct ArticleListView: View {
     }
 }
 
-struct ArticleCardView: View {
-    let article: Article
+// MARK: - Preview
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if let imageURL = article.imageURL {
-                AsyncImage(url: imageURL) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 150)
-                        .cornerRadius(10)
-                        .clipped()
-                } placeholder: {
-                    Color.gray.opacity(0.3)
-                        .frame(height: 150)
-                        .cornerRadius(10)
-                }
-            }
-
-            Text(article.title)
-                .font(.headline)
-                .lineLimit(2)
-
-            HStack {
-                Text(article.byline)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                Spacer()
-                Text(article.publishedDate)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-            }
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-    }
+#Preview {
+    ArticleListView(articles: [])
 }

@@ -1,23 +1,34 @@
+//
+//  ArticleCardView.swift
+//  Raven Challenge
+//
+//  Created by Jóse Bustamante on 11/24/24.
+//
+
+import SwiftUI
 
 struct ArticleCardView: View {
+    
+    // MARK: - Properties
+    
     let article: Article
+    
+    // MARK: - Body
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let imageURL = article.imageURL {
-                AsyncImage(url: imageURL) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 200)
-                        .cornerRadius(10)
-                        .clipped()
-                } placeholder: {
-                    ProgressView()
-                        .frame(height: 200)
-                        .background(Color.gray.opacity(0.3))
-                        .cornerRadius(10)
+                CachedAsyncImage(url: imageURL) {
+                    AnyView(
+                        ProgressView()
+                            .frame(height: 200)
+                            .background(Color.gray.opacity(0.3))
+                            .cornerRadius(10)
+                    )
                 }
+                .frame(height: 200)
+                .cornerRadius(10)
+                .clipped()
             }
             
             Text(article.title)

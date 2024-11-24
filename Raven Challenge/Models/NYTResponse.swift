@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct NYTResponse: Decodable {
+    
+    // MARK: - Properties
+    
+    let results: [Article]
+}

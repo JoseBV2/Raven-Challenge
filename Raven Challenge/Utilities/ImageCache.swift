@@ -5,4 +5,12 @@
 //  Created by Jóse Bustamante on 11/24/24.
 //
 
-import Foundation
+import SwiftUI
+
+class ImageCache {
+    
+    // MARK: - Properties
+    
+    static let shared = NSCache<NSString, UIImage>()
+    
+}

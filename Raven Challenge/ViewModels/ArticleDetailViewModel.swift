@@ -6,3 +6,17 @@
 //
 
 import Foundation
+
+class ArticleDetailViewModel: ObservableObject {
+    
+    // MARK: - @Published properties
+    
+    @Published var article: Article
+    
+    // MARK: - Init
+
+    init(article: Article) {
+        self.article = article
+    }
+}
+

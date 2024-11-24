@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct Raven_ChallengeApp: App {
+    
+    // MARK: - Main APP
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ArticleListView()
         }
     }
 }
