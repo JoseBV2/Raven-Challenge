@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "941C1FCE-A570-4CAF-915B-E786AB4D8810",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Raven Challenge.xcodeproj",
+      "identifier" : "980D4E232CF37F1A0050430C",
+      "name" : "Raven Challenge"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Raven Challenge.xcodeproj",
+        "identifier" : "980D4E342CF37F1B0050430C",
+        "name" : "Raven ChallengeTests"
+      }
+    },
+    {
+      "enabled" : false,
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Raven Challenge.xcodeproj",
+        "identifier" : "980D4E3E2CF37F1B0050430C",
+        "name" : "Raven ChallengeUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
